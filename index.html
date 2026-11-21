@@ -1,51 +1,225 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f6f5f0">
-  <meta name="description" content="Bevin John — software engineer in Chicago. A project-first portfolio of systems, applications and the engineering choices behind them.">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Bevin John — Software Engineer">
-  <meta property="og:description" content="An independent index of software, systems, and the thinking behind the build.">
-  <meta name="author" content="Bevin John">
-  <title>Bevin John — Software Engineer</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <script defer src="projects.js"></script>
-  <script defer src="app.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bevin John | Software Engineer</title>
+<meta name="description" content="Bevin John, software engineer in Chicago. React/FastAPI at Grey-box, Java client-server systems on AWS EC2, and Veil, a Rust zero-knowledge protocol.">
+<meta name="color-scheme" content="light dark">
+<style>
+  :root{
+    --bg:#ffffff; --surface:#f6f8fb; --ink:#111827; --muted:#5b6475; --line:#e3e8ef;
+    --accent:#2457d6; --accent-soft:#e8eefc; --chip:#eef2f7;
+    --radius:14px; --max:1040px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0d1117; --surface:#151b24; --ink:#e7ecf3; --muted:#98a2b3; --line:#232c39;
+           --accent:#7aa2ff; --accent-soft:#1a2440; --chip:#1c2430; }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+       line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 85%,transparent);
+      backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;justify-content:space-between;align-items:center;height:56px}
+  nav .brand{font-weight:700;color:var(--ink)}
+  nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0;font-size:.93rem}
+  nav ul a{color:var(--muted)}
+  nav ul a:hover{color:var(--ink);text-decoration:none}
+
+  /* hero */
+  .hero{padding:84px 0 56px}
+  .eyebrow{display:inline-block;font-size:.8rem;font-weight:600;color:var(--accent);background:var(--accent-soft);
+           padding:4px 12px;border-radius:999px;margin-bottom:18px}
+  .hero h1{font-size:clamp(2.3rem,5vw,3.4rem);line-height:1.08;margin:0 0 16px;letter-spacing:-.02em}
+  .hero p{font-size:1.15rem;color:var(--muted);max-width:640px;margin:0 0 28px}
+  .btns{display:flex;flex-wrap:wrap;gap:10px}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:10px;font-weight:600;font-size:.95rem;
+       border:1px solid var(--line);color:var(--ink);background:var(--surface)}
+  .btn:hover{text-decoration:none;border-color:var(--accent)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  @media (prefers-color-scheme: dark){ .btn.primary{color:#0d1117} }
+
+  /* sections */
+  section{padding:40px 0}
+  h2{font-size:1.5rem;margin:0 0 22px;letter-spacing:-.01em}
+
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  @media (max-width:760px){ .grid{grid-template-columns:1fr} nav ul{display:none} .hero{padding:56px 0 36px} }
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;
+        display:flex;flex-direction:column;transition:transform .15s ease,border-color .15s ease}
+  .card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+  .label{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+  .card h3{margin:6px 0 4px;font-size:1.12rem}
+  .meta{font-size:.88rem;color:var(--muted);margin:0 0 12px}
+  .card ul{margin:0 0 14px;padding-left:18px;font-size:.95rem}
+  .card li{margin:4px 0}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+  .tags span{font-size:.76rem;background:var(--chip);color:var(--muted);padding:3px 10px;border-radius:999px}
+  .foot{margin-top:14px;font-size:.9rem;font-weight:600}
+  .foot.muted{color:var(--muted);font-weight:500}
+
+  /* experience */
+  .timeline{border-left:2px solid var(--line);margin-left:6px}
+  .item{position:relative;padding:0 0 22px 22px}
+  .item::before{content:"";position:absolute;left:-7px;top:7px;width:12px;height:12px;border-radius:50%;
+                background:var(--bg);border:2px solid var(--accent)}
+  .item .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  .item b{font-weight:600}
+  .item span{color:var(--muted);font-size:.92rem}
+  .item p{margin:2px 0 0;color:var(--muted);font-size:.93rem}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:760px){ .two{grid-template-columns:1fr} }
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .panel h3{margin:0 0 10px;font-size:1rem}
+  .panel p{margin:4px 0;font-size:.95rem}
+  .skills{display:flex;flex-wrap:wrap;gap:6px}
+  .skills span{font-size:.82rem;background:var(--chip);padding:4px 11px;border-radius:999px}
+
+  footer{border-top:1px solid var(--line);margin-top:40px;padding:28px 0;color:var(--muted);font-size:.9rem}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+</style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
-  <div id="site-header"></div>
-  <main id="main" tabindex="-1"></main>
-  <div id="site-footer"></div>
 
-  <dialog class="dialog" id="contact-dialog" aria-labelledby="contact-dialog-title">
-    <div class="dialog-pad">
-      <div class="dialog-top"><span class="micro-label"><span class="mini-spark">✳</span> CONNECTION / 01</span><button class="icon-close" type="button" data-close-dialog aria-label="Close dialog">×</button></div>
-      <h2 id="contact-dialog-title">Let's make<br><em>something happen.</em></h2>
-      <p class="dialog-intro">Have an opportunity, a project, or a good technical question? Reach me directly.</p>
-      <div class="contact-line"><div><span class="micro-label">EMAIL</span><a href="mailto:bevinjohn22@gmail.com">bevinjohn22@gmail.com</a></div><button class="copy-btn" type="button" data-copy="bevinjohn22@gmail.com" aria-label="Copy email address">Copy <span aria-hidden="true">↗</span></button></div>
-      <div class="contact-line"><div><span class="micro-label">PHONE</span><a href="tel:+18479900938">(847) 990-0938</a></div><button class="copy-btn" type="button" data-copy="847-990-0938" aria-label="Copy phone number">Copy <span aria-hidden="true">↗</span></button></div>
-      <div class="dialog-bottom"><span>BASED IN CHICAGO</span><button type="button" class="modal-switch" data-open-github>Explore GitHub profiles <span>↗</span></button></div>
-    </div>
-  </dialog>
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#">Bevin John</a>
+    <ul>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#about">Education &amp; Skills</a></li>
+      <li><a href="mailto:bevinjohn22@gmail.com">Contact</a></li>
+    </ul>
+  </div>
+</nav>
 
-  <dialog class="dialog" id="github-dialog" aria-labelledby="github-dialog-title">
-    <div class="dialog-pad">
-      <div class="dialog-top"><span class="micro-label"><span class="mini-spark">✳</span> SOURCE / 02</span><button class="icon-close" type="button" data-close-dialog aria-label="Close dialog">×</button></div>
-      <h2 id="github-dialog-title">Two profiles.<br><em>One body of work.</em></h2>
-      <p class="dialog-intro">Choose a GitHub account to explore the projects and code.</p>
-      <a class="github-choice" href="https://github.com/bevinjohn22" target="_blank" rel="noopener noreferrer"><span class="github-choice-icon">01</span><span class="github-choice-body"><strong>bevinjohn22</strong><small>Personal projects · backend · systems</small></span><span class="github-choice-arrow">↗</span></a>
-      <a class="github-choice" href="https://github.com/bejohn45" target="_blank" rel="noopener noreferrer"><span class="github-choice-icon">02</span><span class="github-choice-body"><strong>bejohn45</strong><small>Java · distributed systems · coursework</small></span><span class="github-choice-arrow">↗</span></a>
-      <div class="dialog-bottom"><span>LINKS OPEN IN A NEW TAB</span><button type="button" class="modal-switch" data-open-contact>Contact me <span>↗</span></button></div>
+<main class="wrap">
+  <header class="hero">
+    <span class="eyebrow">Software Engineer &middot; New Grad, May 2027 &middot; Chicago</span>
+    <h1>Hi, I'm Bevin. I build reliable software, from front-end features to distributed back-end systems.</h1>
+    <p>I currently ship React and FastAPI features at Grey-box, after 3+ years on production systems at Verizon. I also write Java client-server applications on AWS, and I'm building Veil, a zero-knowledge protocol in Rust.</p>
+    <div class="btns">
+      <a class="btn primary" href="resume.pdf">Resume (PDF)</a>
+      <a class="btn" href="https://github.com/bevinjohn22">GitHub</a>
+      <a class="btn" href="https://www.linkedin.com/in/bevin-john-7bb51815a">LinkedIn</a>
+      <a class="btn" href="mailto:bevinjohn22@gmail.com">bevinjohn22@gmail.com</a>
     </div>
-  </dialog>
-  <div class="toast" role="status" aria-live="polite" id="toast" hidden></div>
+  </header>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <div class="grid">
+
+      <article class="card">
+        <span class="label">Internship &middot; Grey-box</span>
+        <h3>Project Codex</h3>
+        <p class="meta">Medical codex application &middot; Aug 2026 &ndash; Present</p>
+        <ul>
+          <li>Own React login and role-based access features in TypeScript, from UI through testing.</li>
+          <li>Test FastAPI authentication and role-permission endpoints, including JWT handling and error responses.</li>
+          <li>Debug React/FastAPI integration with a Neo4j graph database in Docker alongside backend engineers.</li>
+        </ul>
+        <div class="tags"><span>React</span><span>TypeScript</span><span>FastAPI</span><span>JWT</span><span>Neo4j</span><span>Docker</span></div>
+        <a class="foot" href="https://github.com/grey-box/Project_Codex">View repository &rarr;</a>
+      </article>
+
+      <article class="card">
+        <span class="label">Coursework &middot; SER 321</span>
+        <h3>Java Client-Server Systems &amp; AWS</h3>
+        <p class="meta">Distributed Software Systems &middot; Arizona State University</p>
+        <ul>
+          <li>Wrote Java TCP client-server applications, including network services and a Hangman game, managing application state.</li>
+          <li>Deployed a Java TCP socket server on AWS EC2 using Linux, SSH, and Gradle; verified remote client-server communication.</li>
+        </ul>
+        <div class="tags"><span>Java</span><span>TCP sockets</span><span>AWS EC2</span><span>Gradle</span><span>Linux</span></div>
+        <a class="foot" href="https://github.com/bejohn45/ser321-summer26-bejohn">View repository &rarr;</a>
+      </article>
+
+      <article class="card">
+        <span class="label">Personal project</span>
+        <h3>Veil: Privacy-Preserving Transaction Protocol</h3>
+        <p class="meta">Rust &middot; designed and built end-to-end</p>
+        <ul>
+          <li>Architected a modular 4-crate Rust application separating commitments, nullifiers, proofs, and wallet state.</li>
+          <li>Implemented Merkle-tree membership proofs, deterministic nullifiers, and Halo2 zero-knowledge circuits.</li>
+        </ul>
+        <div class="tags"><span>Rust</span><span>Halo2</span><span>Cryptography</span><span>Merkle trees</span></div>
+        <a class="foot" href="https://github.com/bevinjohn22/veil-protocol">View repository &rarr;</a>
+      </article>
+
+      <article class="card">
+        <span class="label">Team project &middot; SER 316</span>
+        <h3>Scrum/Kanban Board Application</h3>
+        <p class="meta">Software Enterprise &middot; Arizona State University</p>
+        <ul>
+          <li>Developed task-management features for a Java Scrum/Kanban board on a student development team.</li>
+          <li>Used Gradle builds and Git/GitHub for collaborative, team-based development.</li>
+        </ul>
+        <div class="tags"><span>Java</span><span>Gradle</span><span>Git/GitHub</span><span>Teamwork</span></div>
+        <span class="foot muted">Private course repository &middot; code available on request</span>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="experience">
+    <h2>Experience</h2>
+    <div class="timeline">
+      <div class="item">
+        <div class="row"><b>Software Engineering Intern, Grey-box</b><span>Aug 2026 &ndash; Present</span></div>
+        <p>React, TypeScript, FastAPI, and Neo4j on Project Codex.</p>
+      </div>
+      <div class="item">
+        <div class="row"><b>Engineer II &ndash; Network Operations, Verizon Wireless</b><span>Jul 2023 &ndash; Dec 2025</span></div>
+        <p>Diagnosed distributed system failures for millions of customers; Python tooling sped incident triage by an estimated 30%.</p>
+      </div>
+      <div class="item">
+        <div class="row"><b>Data Analyst Apprentice, Verizon Wireless</b><span>Jun 2022 &ndash; Jul 2023</span></div>
+        <p>Python and SQL data pipelines; automated eligibility logic across 4M+ customer records.</p>
+      </div>
+      <div class="item">
+        <div class="row"><b>Data Science Intern, Motorola Solutions</b><span>Jun 2020 &ndash; Aug 2021</span></div>
+        <p>Data-validation workflows that reduced configuration data errors by 20%.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <h2>Education &amp; Skills</h2>
+    <div class="two">
+      <div class="panel">
+        <h3>Arizona State University</h3>
+        <p>B.S. Software Engineering &middot; Expected May 2027</p>
+        <p style="color:var(--muted)">Data Structures &amp; Algorithms, Distributed Software Systems, Operating Systems, Software Enterprise, Discrete Mathematics, Linear Algebra</p>
+      </div>
+      <div class="panel">
+        <h3>Skills</h3>
+        <div class="skills">
+          <span>Java</span><span>Python</span><span>TypeScript</span><span>JavaScript</span><span>SQL</span><span>C</span><span>Rust</span>
+          <span>React</span><span>Node.js</span><span>FastAPI</span><span>REST APIs</span><span>Neo4j</span>
+          <span>Gradle</span><span>Git/GitHub</span><span>Docker</span><span>Linux</span><span>AWS EC2</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Bevin John</span>
+    <span><a href="mailto:bevinjohn22@gmail.com">bevinjohn22@gmail.com</a> &middot; (847) 990-0938 &middot; <a href="https://github.com/bejohn45">Coursework GitHub</a></span>
+  </div>
+</footer>
+
 </body>
 </html>
