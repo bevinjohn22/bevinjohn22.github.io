@@ -6,6 +6,7 @@
 <title>Bevin John | Software Engineer</title>
 <meta name="description" content="Bevin John, software engineer in Chicago. React/FastAPI at Grey-box, Java client-server systems on AWS EC2, and Veil, a Rust zero-knowledge protocol.">
 <meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
   :root{
     --bg:#ffffff; --surface:#f6f8fb; --ink:#111827; --muted:#5b6475; --line:#e3e8ef;
@@ -87,6 +88,24 @@
 
   footer{border-top:1px solid var(--line);margin-top:40px;padding:28px 0;color:var(--muted);font-size:.9rem}
   footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  /* contact dialog */
+  dialog{border:1px solid var(--line);border-radius:16px;padding:0;width:min(92vw,400px);
+         background:var(--bg);color:var(--ink);box-shadow:0 20px 50px rgba(0,0,0,.25)}
+  dialog::backdrop{background:rgba(10,14,22,.55);backdrop-filter:blur(2px)}
+  .dlg{padding:24px}
+  .dlg-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .dlg-head h3{margin:0;font-size:1.2rem}
+  .x{border:0;background:transparent;color:var(--muted);font-size:1.5rem;line-height:1;cursor:pointer;padding:4px 8px;border-radius:8px}
+  .x:hover{background:var(--surface);color:var(--ink)}
+  .dlg p.sub{margin:0 0 16px;color:var(--muted);font-size:.93rem}
+  .crow{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--surface);
+        border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px}
+  .crow small{display:block;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.06em}
+  .crow span{font-weight:600;word-break:break-all}
+  .copy{border:1px solid var(--line);background:var(--bg);color:var(--ink);font-weight:600;font-size:.85rem;
+        padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+  .copy:hover{border-color:var(--accent)}
+  .copy.done{background:var(--accent);border-color:var(--accent);color:#fff}
 </style>
 </head>
 <body>
@@ -98,7 +117,7 @@
       <li><a href="#projects">Projects</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#about">Education &amp; Skills</a></li>
-      <li><a href="mailto:bevinjohn22@gmail.com">Contact</a></li>
+      <li><a href="#contact" data-contact>Contact</a></li>
     </ul>
   </div>
 </nav>
@@ -112,7 +131,7 @@
       <a class="btn primary" href="resume.pdf">Resume (PDF)</a>
       <a class="btn" href="https://github.com/bevinjohn22">GitHub</a>
       <a class="btn" href="https://www.linkedin.com/in/bevin-john-7bb51815a">LinkedIn</a>
-      <a class="btn" href="mailto:bevinjohn22@gmail.com">bevinjohn22@gmail.com</a>
+      <a class="btn" href="#contact" data-contact>Contact</a>
     </div>
   </header>
 
@@ -217,9 +236,45 @@
 <footer>
   <div class="wrap">
     <span>&copy; 2026 Bevin John</span>
-    <span><a href="mailto:bevinjohn22@gmail.com">bevinjohn22@gmail.com</a> &middot; (847) 990-0938 &middot; <a href="https://github.com/bejohn45">Coursework GitHub</a></span>
+    <span><a href="#contact" data-contact>Contact</a> &middot; <a href="https://github.com/bejohn45">Coursework GitHub</a></span>
   </div>
 </footer>
 
+<dialog id="contact" aria-labelledby="contact-title">
+  <div class="dlg">
+    <div class="dlg-head">
+      <h3 id="contact-title">Get in touch</h3>
+      <button class="x" type="button" aria-label="Close" data-close>&times;</button>
+    </div>
+    <p class="sub">Happy to talk about software engineering roles.</p>
+    <div class="crow">
+      <div><small>Email</small><span>bevinjohn22@gmail.com</span></div>
+      <button class="copy" type="button" data-copy="bevinjohn22@gmail.com">Copy</button>
+    </div>
+    <div class="crow">
+      <div><small>Phone</small><span>(847) 990-0938</span></div>
+      <button class="copy" type="button" data-copy="847-990-0938">Copy</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(function(){
+  var d=document.getElementById('contact');
+  function open(e){ if(e) e.preventDefault(); if(d.showModal){ d.showModal(); } else { d.setAttribute('open',''); } }
+  document.querySelectorAll('[data-contact]').forEach(function(a){ a.addEventListener('click',open); });
+  d.querySelector('[data-close]').addEventListener('click',function(){ d.close ? d.close() : d.removeAttribute('open'); });
+  d.addEventListener('click',function(e){ if(e.target===d && d.close) d.close(); });
+  d.querySelectorAll('[data-copy]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var t=b.getAttribute('data-copy');
+      function ok(){ b.textContent='Copied'; b.classList.add('done'); setTimeout(function(){ b.textContent='Copy'; b.classList.remove('done'); },1500); }
+      if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(t).then(ok,function(){}); }
+      else { var ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy'); ok();}catch(_){} ta.remove(); }
+    });
+  });
+  if(location.hash==='#contact') open();
+})();
+</script>
 </body>
 </html>
